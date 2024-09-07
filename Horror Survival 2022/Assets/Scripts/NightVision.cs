@@ -16,6 +16,11 @@ public class NightVision : MonoBehaviour
         cam = Camera.main;
     }
 
+    private void OnEnable()
+    {
+        zoombarImage.fillAmount = 0.6f;
+    }
+
     private void Update()
     {
         if(Input.GetAxis("Mouse ScrollWheel") > 0)
