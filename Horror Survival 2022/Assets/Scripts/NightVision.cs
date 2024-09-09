@@ -6,14 +6,24 @@ using UnityEngine.UI;
 public class NightVision : MonoBehaviour
 {
     [SerializeField] private GameObject zoomBarGameObject;
+    [SerializeField] private GameObject batteryChunkGameObject;
     [SerializeField] private Camera cam;
+    [SerializeField] private float batteryPower = 1f;
+    [SerializeField] private float batteryDrainTime = 2f;
 
     private Image zoombarImage;
+    private Image batteryChunkImage;
 
     private void Awake()
     {
         zoombarImage = zoomBarGameObject.GetComponent<Image>();
+        batteryChunkImage = batteryChunkGameObject.GetComponent<Image>();
         cam = Camera.main;
+    }
+
+    private void Start()
+    {
+        InvokeRepeating("BatteryDrain", batteryDrainTime, batteryDrainTime);
     }
 
     private void OnEnable()
@@ -39,6 +49,16 @@ public class NightVision : MonoBehaviour
                 cam.fieldOfView += 5;
                 zoombarImage.fillAmount = cam.fieldOfView / 100;
             }
+        }
+
+        batteryChunkImage.fillAmount = batteryPower;
+    }
+
+    private void BatteryDrain()
+    {
+        if (batteryPower > 0.0f)
+        {
+            batteryPower -= 0.25f;
         }
     }
 }
