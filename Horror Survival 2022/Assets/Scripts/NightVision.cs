@@ -8,8 +8,11 @@ public class NightVision : MonoBehaviour
     [SerializeField] private GameObject zoomBarGameObject;
     [SerializeField] private GameObject batteryChunkGameObject;
     [SerializeField] private Camera cam;
-    [SerializeField] private float batteryPower = 1f;
-    [SerializeField] private float batteryDrainTime = 2f;
+
+    [Header("Battery parameters")]
+    [HideInInspector] public float batteryPower = 1f;
+    [SerializeField] private float batteryDrainTimer = 2f;
+    [SerializeField] private float batteryDrainRate = 2f;
 
     private Image zoombarImage;
     private Image batteryChunkImage;
@@ -19,11 +22,6 @@ public class NightVision : MonoBehaviour
         zoombarImage = zoomBarGameObject.GetComponent<Image>();
         batteryChunkImage = batteryChunkGameObject.GetComponent<Image>();
         cam = Camera.main;
-    }
-
-    private void Start()
-    {
-        InvokeRepeating("BatteryDrain", batteryDrainTime, batteryDrainTime);
     }
 
     private void OnEnable()
@@ -54,11 +52,19 @@ public class NightVision : MonoBehaviour
         batteryChunkImage.fillAmount = batteryPower;
     }
 
-    private void BatteryDrain()
+    public void DrainBattery()
     {
-        if (batteryPower > 0.0f)
+        batteryDrainTimer -= Time.deltaTime;
+        // drain the battery every 5 seconds
+        if (batteryDrainTimer <= 0f)
         {
-            batteryPower -= 0.25f;
+            batteryDrainTimer = 5f;
+
+            if (batteryPower > 0f)
+            {
+                batteryPower -= batteryDrainRate;
+            }
         }
     }
+
 }

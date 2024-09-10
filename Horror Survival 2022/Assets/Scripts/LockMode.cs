@@ -6,16 +6,17 @@ using UnityEngine.Rendering.PostProcessing;
 public class LockMode : MonoBehaviour
 {
     [SerializeField] private PostProcessProfile standard;
-    [SerializeField] private PostProcessProfile nightVision;
+    [SerializeField] private PostProcessProfile nightVisionPostProcessProfile;
     [SerializeField] private GameObject nightVisionOverlay;
 
     private PostProcessVolume postProcessVolume;
+    private NightVision nightVision;
     private bool nightVisionOn = false;
 
     private void Awake()
     {
         postProcessVolume = GetComponent<PostProcessVolume>();
-        
+        nightVision = nightVisionOverlay.GetComponent<NightVision>();
     }
 
     private void Start()
@@ -26,21 +27,45 @@ public class LockMode : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.N))
+        if (Input.GetKeyDown(KeyCode.N))
         {
-            if(!nightVisionOn)
+            nightVisionOn = !nightVisionOn;
+        }
+        if (nightVisionOn)
+        {
+            if (!HasNightVisionBattery())
             {
-                postProcessVolume.profile = nightVision;
-                nightVisionOverlay.SetActive(true);
-                nightVisionOn = true;
+                EnableNormalVision();
             }
             else
             {
-                postProcessVolume.profile = standard;
-                nightVisionOverlay.SetActive(false);
-                this.gameObject.GetComponent<Camera>().fieldOfView = 60;
-                nightVisionOn = false;
+                nightVision.DrainBattery();
+                EnableNightVision();
             }
         }
+        if(!nightVisionOn)
+        {
+            EnableNormalVision();
+        }
+        
+
+    }
+
+    private bool HasNightVisionBattery()
+    {
+        return nightVision.batteryPower > 0.0f;
+    }
+
+    private void EnableNormalVision()
+    {
+        postProcessVolume.profile = standard;
+        nightVisionOverlay.SetActive(false);
+        this.gameObject.GetComponent<Camera>().fieldOfView = 60;
+    }
+
+    private void EnableNightVision()
+    {
+        postProcessVolume.profile = nightVisionPostProcessProfile;
+        nightVisionOverlay.SetActive(true);
     }
 }
