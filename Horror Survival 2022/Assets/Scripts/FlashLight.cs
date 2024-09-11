@@ -12,52 +12,34 @@ public class FlashLight : MonoBehaviour
 
     private Image batteryChunksImage;
     private float batteryPower = 1.0f;
-    private bool flaslightOn = false;
 
     private void Awake()
     {
-        flaslightGameObject.gameObject.SetActive(false);
         batteryChunksImage = batteryChunksGameObject.GetComponent<Image>();
     }
 
     private void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            flaslightOn = !flaslightOn;
-        }
-        if (flaslightOn)
-        {
-            if (!HasFlaslightBattery())
-            {
-                DisableFlashLight();
-            }
-            else
-            {
-                EnableFlashLight();
-                DrainBattery();
-            }
-        }
-        if (!flaslightOn)
-        {
-            DisableFlashLight();
-        }
-
         batteryChunksImage.fillAmount = batteryPower;
     }
 
-    private void EnableFlashLight()
+    public void EnableFlashLight()
     {
-        flaslightGameObject.gameObject.SetActive(true);
+        // activate canvas
+        gameObject.SetActive(true);
+        // activates spotlight
+        flaslightGameObject.SetActive(true);
     }
 
-    private void DisableFlashLight()
+    public void DisableFlashLight()
     {
-        flaslightGameObject.gameObject.SetActive(false);
+        // activate canvas
+        gameObject.SetActive(false);
+        // activates spotlight
+        flaslightGameObject.SetActive(false);
     }
 
-    private bool HasFlaslightBattery()
+    public bool HasFlaslightBattery()
     {
         return batteryPower > 0.0f;
     }

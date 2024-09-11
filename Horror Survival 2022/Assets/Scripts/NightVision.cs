@@ -52,6 +52,11 @@ public class NightVision : MonoBehaviour
         batteryChunkImage.fillAmount = batteryPower;
     }
 
+    public bool HasNightVisionBattery()
+    {
+        return batteryPower > 0.0f;
+    }
+
     public void DrainBattery()
     {
         batteryDrainTimer -= Time.deltaTime;
